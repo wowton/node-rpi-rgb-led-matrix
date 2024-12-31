@@ -14,7 +14,6 @@
 #include <string> 
 #include <algorithm>
 
-#include <led-matrix.h>
 #include <ledmatrix.h>
 #include <graphics.h>
 
@@ -23,45 +22,43 @@
 using namespace v8;
 using namespace node;
 using namespace rgb_matrix;
-using rgb_matrix::GPIO;
 
 Nan::Persistent<Function> LedMatrix::constructor;
 std::map<std::string, rgb_matrix::Font> LedMatrix::fontMap;
 
-LedMatrix::LedMatrix (int rows, int cols, int parallel_displays, int chained_displays, int brightness, const char* mapping, const char* rgbseq, std::vector<std::string> flags)
+LedMatrix::LedMatrix (int rows, int cols, int parallel_displays, int chained_displays, int brightness, const char* mapping, const char* rgbseq, std::vector<std::string> flags) 
 {
+
 	//dump out flags into a vector of char* <CRRINNGGEEEEEE>
 	std::vector<char*> c_strs;
 	c_strs.push_back("bin");
-	for(auto &f : flags)
+	for(auto &f : flags) //FIXED THIS BEING VALUE LOOP INSTEAD OF REFERENCE LOOP AAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHH
 	{
-		c_strs.push_back(&f[0]); //every known version of std::string uses continuos memory so this is safe~
+		c_strs.push_back(&f[0]); //every known version of std::string uses continuos memory so this is safe~ 
 		std::cout << &f[0] << std::endl;
 	}
 
 	int num = c_strs.size();
 	char** d = c_strs.data();
 
-	RGBMatrix::Options defaults;
+	RGBMatrix::Options defaults; 
 	rgb_matrix::RuntimeOptions runtime;
 
+
 	defaults.rows = rows;
-	defaults.cols = cols;
+	defaults.cols = cols; 
 	defaults.chain_length = chained_displays;
-	defaults.parallel = parallel_displays;
+	defaults.parallel = parallel_displays; 
 	defaults.brightness = brightness;
 	defaults.hardware_mapping = mapping;
 	defaults.led_rgb_sequence = rgbseq;
 
-	//By default, don't drop root privileges (prevents existing code from
-	//losing root privileges unexpectedly and breaking). Can be overridden
-	//by adding --led-drop-privs to your flags array.
-	runtime.drop_privileges = 0;
+	std::cout << rgb_matrix::ParseOptionsFromFlags(&num, &d, &defaults, &runtime, true) << std::endl;
+	//temp debug output
+	//parse extra settings flags for POWER_USERS (TM)
 
-	//FIXME: This is called CreateFromFlags in the latest version of the hzeller library. Fix that when we update.
-	matrix = rgb_matrix::CreateMatrixFromFlags(&num, &d, &defaults, &runtime, true);
-	assert(matrix != NULL);
-
+	matrix = CreateMatrixFromOptions(defaults, runtime);
+	// matrix = new RGBMatrix(&io, defaults);	
 	matrix->set_luminance_correct(true);
 
 	canvas = matrix->CreateFrameCanvas();
@@ -399,8 +396,8 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args)
 	// grab parameters
 	int rows = 32;
 	int cols = 32;
-	int parallel = 1;
 	int chained = 1;
+	int parallel = 1;
 	int brightness = 100;
 	std::string mapping = "regular";
 	std::string rgbSeq = "RGB";
@@ -415,10 +412,10 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args)
 	}
 
 	if(args.Length() > 2 && args[2]->IsNumber()) {
-		parallel = Nan::To<int>(args[2]).FromJust();
+		chained = Nan::To<int>(args[2]).FromJust();
 	}
 	if(args.Length() > 3 && args[3]->IsNumber()) {
-		chained = Nan::To<int>(args[3]).FromJust();
+		parallel = Nan::To<int>(args[3]).FromJust();
 	}
 
 	if(args.Length() > 4 && args[4]->IsNumber())  {
@@ -447,7 +444,7 @@ void LedMatrix::New(const Nan::FunctionCallbackInfo<Value>& args)
 	}
 
 	// make the matrix
-	LedMatrix* matrix = new LedMatrix(rows, cols, parallel, chained, brightness, mapping.c_str(), rgbSeq.c_str(), strings);
+	LedMatrix* matrix = new LedMatrix(rows, cols, chained, parallel, brightness,  mapping.c_str(), rgbSeq.c_str(), strings);
 	matrix->Wrap(args.This());
 
 	// return this object
