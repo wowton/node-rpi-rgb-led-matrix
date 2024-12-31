@@ -1,36 +1,35 @@
-# easybotics-rpi-rgb-led-matrix
+# wowton-rpi-rgb-led-matrix
 
 # WORKS ON THE RASPBERRY PI 3B AND RASPBERRY PI 4!!!!
-# tested on node 8 and node 10, probably works on node13 now 
-# check out this guys fork: https://github.com/easybotics/node-rpi-rgb-led-matrix/pull/9 
-# targetted at raspbian jesse 
+# tested on node 16
+# targetted at raspbian bookworm 
 Pilot your rgb led matrix with Nodejs on Raspberry Pi ! Nodejs binding of rpi-rgb-led-matrix library https://github.com/hzeller/rpi-rgb-led-matrix
 
 
-**Fork of: https://github.com/zeitungen/node-rpi-rgb-led-matrix**
+**Fork of: https://github.com/easybotics/node-rpi-rgb-led-matrix**
 
-**Actively being maintained and modified for: https://github.com/easybotics/node-red-contrib-led-matrix**
+**Actively being maintained and modified for: https://github.com/wowton/node-red-contrib-led-matrix**
 
 **It is binding recent version of rpi-rgb-led-matrix library.**
 
 
 ### Installation with npm
 ```
-$ npm i easybotics-rpi-rgb-led-matrix
+$ npm i wowton-rpi-rgb-led-matrix
 ```
 
 ### Installation with git
 
 ```
-$ git clone --recursive https://github.com/easybotics/node-rpi-rgb-led-matrix.git
-$ cd easybotics-rpi-rgb-led-matrix
+$ git clone --recursive https://github.com/wowton/node-rpi-rgb-led-matrix.git
+$ cd wowton-rpi-rgb-led-matrix
 $ npm i
 ```
 
 ## Get some Fun
 
 ```js
-var LedMatrix = require("easybotics-rpi-rgb-led-matrix");
+var LedMatrix = require("wowton-rpi-rgb-led-matrix");
 
 //init a 16 rows  by 16 cols led matrix 
 //default hardware mapping is 'regular', could be 'adafruit-hat-pwm' ect 
