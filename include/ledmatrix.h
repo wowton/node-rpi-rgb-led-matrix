@@ -102,4 +102,3 @@ class LedMatrix : public node::ObjectWrap
 
 
 #endif
-

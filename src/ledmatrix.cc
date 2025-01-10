@@ -14,6 +14,7 @@
 #include <string> 
 #include <algorithm>
 
+#include <led-matrix.h>
 #include <ledmatrix.h>
 #include <graphics.h>
 
